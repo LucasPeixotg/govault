@@ -29,6 +29,11 @@ func main() {
 	cmd.Stdout = cmdLogger
 	cmd.Stdin = os.Stdin
 
+	//unix.Unshare()
+
+	// TODO:
+	// isolate namespaces (network, pids, uts, mount [chroot])
+
 	mainLogger.Info("executing...")
 	cmd.Run()
 }

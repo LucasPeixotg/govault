@@ -9,7 +9,7 @@ import (
 
 func main() {
 	mainLogger := logger.New("[ MAIN ]   ", logger.ERROR)
-	cmdLogger := logger.New("[ CMD ]   ", logger.ERROR)
+	//cmdLogger := logger.New("[ CMD ]   ", logger.ERROR)
 
 	if len(os.Args[1:]) == 0 {
 		mainLogger.Error("command must be specified as a cli argument")
@@ -21,18 +21,17 @@ func main() {
 	mainLogger.Info("command to be executed: ", commandContent)
 
 	var cmd *exec.Cmd
-	if len(commandContent) > 1 {
-		cmd = exec.Command(commandContent[0], commandContent[1:]...)
-	} else {
-		cmd = exec.Command(commandContent[0], commandContent[1:]...)
-	}
-	cmd.Stdout = cmdLogger
+	unshareCommand := "unshare -uipf --mount-proc "
+	cmd = exec.Command(unshareCommand, commandContent...)
+	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
 
-	//unix.Unshare()
-
 	// TODO:
-	// isolate namespaces (network, pids, uts, mount [chroot])
+	// chroot
+
+	// command to isolate namespaces
+	// unshare -uipf --mount-proc /bin/sh
+	//
 
 	mainLogger.Info("executing...")
 	cmd.Run()
